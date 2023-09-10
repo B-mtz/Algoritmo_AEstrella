@@ -53,6 +53,8 @@ public class LogicGetStartEnd implements ActionListener {
             changeColor();
             //Se obtiene las coordenadas apartir del valor x de start y end
             getCoordinates();
+            captureMatrix.executeAlgoritm();
+
         }//Se restablecen los colores y valores de bStart y bEnd que representan el inicio y fin
         else if (e.getSource().equals(captureMatrix.btnReset)){
             resetBackground();
@@ -103,5 +105,12 @@ public class LogicGetStartEnd implements ActionListener {
     private void printCoordinatesStartEnd(){
         System.out.println("Coordenadas de inicio: ["+start.getX()+"]["+start.getY()+"]");
         System.out.println("Coordenadas de fin:    ["+end.getX()+"]["+end.getY()+"]");
+    }
+
+    public Coordinate getStart() {
+        return start;
+    }
+    public Coordinate getEnd() {
+        return end;
     }
 }

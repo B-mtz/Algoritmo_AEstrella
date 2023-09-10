@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 public class LogicCaptureMatrix implements ActionListener {
     CaptureMatrix captureMatrix;
     int data[][];
+    private Coordinate  start,end;
     private int rows, columns;
     public LogicCaptureMatrix(CaptureMatrix captureMatrix){
         this.captureMatrix = captureMatrix;
@@ -79,6 +80,7 @@ public class LogicCaptureMatrix implements ActionListener {
             System.out.println(" ");
         }
     }
+
     //Imprime los datos de los JTextField contenidos en el ArrayList Squares
     public void printSquares(){
         System.out.println("\nValores del arrayList Squares: ");
