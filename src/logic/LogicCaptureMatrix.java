@@ -22,6 +22,7 @@ public class LogicCaptureMatrix implements ActionListener {
             if (validateData()){
                 printSquares();
                 fillMatrix();
+                captureMatrix.getStartEnd();
             }
         }
     }

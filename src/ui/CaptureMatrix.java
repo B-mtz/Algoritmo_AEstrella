@@ -16,7 +16,6 @@ public class CaptureMatrix extends JFrame{
     public JButton btnFill, btnConfirm, btnReset;
     public int rows, columns;
 
-
     public CaptureMatrix(int rows, int columns){
         super("Capture Matrix");
         contentPane = new JPanel(new BorderLayout());
@@ -31,6 +30,7 @@ public class CaptureMatrix extends JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
+    // Muestra una matriz para que el usuario rellene los valores desde la interfaz
     public void fillMatrix(){
             contentNorth = new JPanel(new FlowLayout());
             contentNorth.setBorder(BorderFactory.createEmptyBorder(15, 5, 0, 5));
@@ -75,4 +75,46 @@ public class CaptureMatrix extends JFrame{
             contentPane.add(contentCenter,BorderLayout.CENTER);
             contentPane.add(contentSouth,BorderLayout.SOUTH);
     }
+    //Muestra una matriz de botones que permite seleccionar el inicio y el fin
+    public void getStartEnd(){
+        contentNorth.removeAll();
+        contentCenter.removeAll();
+        contentSouth.removeAll();
+
+        //Content North
+        JLabel title  = new JLabel("Selecciona el inicio y el fin");
+        title.setFont(font);
+        title.setForeground(Color.ORANGE);
+        contentNorth.add(title);
+
+        //Content Center
+        for (int i= 0; i<rows*columns;i++){
+            JButton a = new JButton(squares.get(i).getText());
+            a.setBackground(Color.DARK_GRAY);
+            a.setForeground(Color.ORANGE);
+            a.setFont(font);
+            a.setHorizontalAlignment(0);
+            a.setSize(5,5);
+            contentCenter.add(a);
+            btnsquares.add(a);
+        }
+
+        //Content South
+        btnConfirm = new JButton("Confirmar");
+        btnConfirm.setBackground(Color.ORANGE);
+        btnConfirm.setForeground(Color.BLACK);
+        btnConfirm.setFont(font);
+        contentSouth.add(btnConfirm);
+
+        btnReset = new JButton("Restablecer");
+        btnReset.setBackground(Color.ORANGE);
+        btnReset.setForeground(Color.BLACK);
+        btnReset.setFont(font);
+        contentSouth.add(btnReset);
+
+        contentNorth.updateUI();
+        contentCenter.updateUI();
+        contentSouth.updateUI();
+    }
+
 }
