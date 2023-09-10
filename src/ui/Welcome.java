@@ -1,16 +1,17 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 public class Welcome extends JFrame{
-    JPanel contentPane, contentCenter,contentSouth;
-    JButton create;
-    JTextField txtRows, txtColumns;
-    int columns,rows;
+    private JPanel contentPane, contentCenter,contentSouth;
+    public JButton create;
+    public JTextField txtRows, txtColumns;
     private Font font = new Font("Cascadia Code",Font.BOLD,20);
     public Welcome(){
         super("Welcome");
@@ -25,6 +26,7 @@ public class Welcome extends JFrame{
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
+    //Se crean componentes para capturar las filas y columnas
     private void getRowsColumns(){
         contentCenter = new JPanel();
         contentCenter.setLayout(null);
@@ -38,6 +40,14 @@ public class Welcome extends JFrame{
         txtRows.setForeground(Color.ORANGE);
         txtRows.setHorizontalAlignment(0);
         txtRows.setBounds(140,49,50,25);
+        ((AbstractDocument) txtRows.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (fb.getDocument().getLength() + text.length() - length <= 1) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
 
         JLabel lbColumns = new JLabel("  Columnas: ");
         lbColumns.setFont(font);
@@ -48,6 +58,14 @@ public class Welcome extends JFrame{
         txtColumns.setForeground(Color.ORANGE);
         txtColumns.setHorizontalAlignment(0);
         txtColumns.setBounds(320,49,50,25);
+        ((AbstractDocument) txtColumns.getDocument()).setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (fb.getDocument().getLength() + text.length() - length <= 1) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
 
         create = new JButton("Create");
         create.setFont(font);
@@ -62,4 +80,5 @@ public class Welcome extends JFrame{
         contentCenter.add(create);
         contentPane.add(contentCenter);
     }
+
 }
