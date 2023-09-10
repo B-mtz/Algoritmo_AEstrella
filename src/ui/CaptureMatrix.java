@@ -24,6 +24,7 @@ public class CaptureMatrix extends JFrame{
         this.rows = rows;
         this.columns = columns;
 
+        //Se crean los componentes de la interfaz
         fillMatrix();
 
         this.setVisible(true);
@@ -32,6 +33,7 @@ public class CaptureMatrix extends JFrame{
     }
     // Muestra una matriz para que el usuario rellene los valores desde la interfaz
     public void fillMatrix(){
+            //Se crean paneles con layout para agregar componentes visuales de la interfaz
             contentNorth = new JPanel(new FlowLayout());
             contentNorth.setBorder(BorderFactory.createEmptyBorder(15, 5, 0, 5));
             contentCenter = new JPanel(new GridLayout(rows,columns));
@@ -75,6 +77,7 @@ public class CaptureMatrix extends JFrame{
             contentPane.add(contentCenter,BorderLayout.CENTER);
             contentPane.add(contentSouth,BorderLayout.SOUTH);
     }
+
     //Muestra una matriz de botones que permite seleccionar el inicio y el fin
     public void getStartEnd(){
         contentNorth.removeAll();

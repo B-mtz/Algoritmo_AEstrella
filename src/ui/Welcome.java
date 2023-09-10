@@ -19,6 +19,7 @@ public class Welcome extends JFrame{
         contentPane = new JPanel(new BorderLayout());
         this.setContentPane(contentPane);
 
+        //Se llama al metodo para crear los componentes de la interfaz
         getRowsColumns();
 
         this.setVisible(true);
