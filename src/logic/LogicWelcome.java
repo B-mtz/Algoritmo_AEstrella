@@ -8,8 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LogicWelcome implements ActionListener {
-    Welcome welcome;
-    private int rows,columns;
+    private  Welcome welcome;
+    private  int rows,columns;
     public LogicWelcome(Welcome welcome){
         this.welcome = welcome;
         this.welcome.create.addActionListener(this);
@@ -32,6 +32,7 @@ public class LogicWelcome implements ActionListener {
                     if (rows != 1 && columns !=1){
                         //Ejecuta la interfaz para capturar datos de la matriz
                         CaptureMatrix captureMatrix = new CaptureMatrix(rows,columns);
+                        LogicCaptureMatrix logicCaptureMatrix = new LogicCaptureMatrix(captureMatrix);
                         welcome.dispose();
                     }else{
                         JOptionPane.showMessageDialog(null,"La matriz minima es de 2x2");
