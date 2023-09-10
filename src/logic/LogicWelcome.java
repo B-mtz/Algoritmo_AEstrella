@@ -1,5 +1,6 @@
 package logic;
 
+import ui.CaptureMatrix;
 import ui.Welcome;
 
 import javax.swing.*;
@@ -28,11 +29,16 @@ public class LogicWelcome implements ActionListener {
                     rows = Integer.parseInt(welcome.txtRows.getText());
                     columns = Integer.parseInt(welcome.txtColumns.getText());
 
-                    //Ejecuta la interfaz para capturar datos de la matriz
-
+                    if (rows != 1 && columns !=1){
+                        //Ejecuta la interfaz para capturar datos de la matriz
+                        CaptureMatrix captureMatrix = new CaptureMatrix(rows,columns);
+                        welcome.dispose();
+                    }else{
+                        JOptionPane.showMessageDialog(null,"La matriz minima es de 2x2");
+                    }
                 }
             }catch (Exception exception ){
-                JOptionPane.showMessageDialog(null,"Solo se permiten numeros");
+                JOptionPane.showMessageDialog(null,"Solo se permiten numeros: "+exception);
             }
         }
     }

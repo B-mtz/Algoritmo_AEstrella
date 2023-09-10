@@ -9,7 +9,7 @@ import java.awt.*;
 
 
 public class Welcome extends JFrame{
-    private JPanel contentPane, contentCenter,contentSouth;
+    private JPanel contentPane, contentCenter;
     public JButton create;
     public JTextField txtRows, txtColumns;
     private Font font = new Font("Cascadia Code",Font.BOLD,20);
