@@ -1,10 +1,14 @@
 package logic;
 
 public class Coordinate {
-    private int x,y;
+    private int x, y;
     public Coordinate(int x, int y){
         this.x = x;
         this.y = y;
+    }
+    public String retunCoordinate(){
+        String aux = x +","+ y;
+        return aux;
     }
 
     public int getX() {

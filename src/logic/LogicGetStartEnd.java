@@ -54,6 +54,7 @@ public class LogicGetStartEnd implements ActionListener {
             //Se obtiene las coordenadas apartir del valor x de start y end
             getCoordinates();
             captureMatrix.executeAlgoritm();
+            LogicExecuteAlgorithm logicExecuteAlgorithm = new LogicExecuteAlgorithm(start, end, data,captureMatrix.rows,captureMatrix.columns);
 
         }//Se restablecen los colores y valores de bStart y bEnd que representan el inicio y fin
         else if (e.getSource().equals(captureMatrix.btnReset)){
