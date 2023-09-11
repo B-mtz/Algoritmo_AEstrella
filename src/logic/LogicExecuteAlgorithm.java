@@ -5,14 +5,10 @@ import java.util.ArrayList;
 public class LogicExecuteAlgorithm {
     private Coordinate coordinateStart, coordinateEnd;
     private int[][] data;
-    public ArrayList<Node> openSet = new ArrayList<>();
-    public ArrayList<Node> openSetRegister = new ArrayList<>();
-    public ArrayList<Node> closeSet = new ArrayList<>();
-    public ArrayList<Node> discarded = new ArrayList<>();
+    private ArrayList<Node> openSet = new ArrayList<>(),openSetRegister = new ArrayList<>(),closeSet = new ArrayList<>(),discarded = new ArrayList<>();
+    private ArrayList<Coordinate> routes = new ArrayList<>();
     private int heuristic, coste, total, minCosteTotal;
     private int rows, columns;
-    private boolean endPoint = false;
-    ArrayList<Coordinate> routes = new ArrayList<>();
 
     public LogicExecuteAlgorithm(Coordinate start, Coordinate end, int[][] data, int rows, int columns) {
         this.coordinateStart = start;
@@ -21,7 +17,6 @@ public class LogicExecuteAlgorithm {
         this.rows = rows;
         this.columns = columns;
     }
-
     public void executeAlgorithm() {
         createNodeStart();
         while (!openSet.isEmpty()) {
@@ -30,7 +25,6 @@ public class LogicExecuteAlgorithm {
         printOpenSetRegister();
         printCloseSet();
         generateRoute();
-        printRoute();
     }
 
     public void logic(Node node) {
@@ -38,7 +32,6 @@ public class LogicExecuteAlgorithm {
         if (node.getTotal() == minCosteTotal) {
             //Si la casilla es diferente a la meta continuar
             if (node.getCoordinate().getX() == coordinateEnd.getX() && node.getCoordinate().getY() == coordinateEnd.getY()) {
-                endPoint = true;
                 closeSet.add(node);
                 openSet.remove(node);
             } else {
@@ -151,7 +144,6 @@ public class LogicExecuteAlgorithm {
         openSet.add(start);
         openSetRegister.add(start);
     }
-
     //Crea nodos
     private Node createNode(Coordinate origin, Coordinate destiny) {
         coste = calulateHeuristic(coordinateStart, destiny);
@@ -176,7 +168,6 @@ public class LogicExecuteAlgorithm {
         return aux;
     }
 
-
     //imprime openSet y CloseT
     public void printOpenSetRegister(){
         System.out.println("Size openSet: "+openSetRegister.size());
@@ -191,6 +182,7 @@ public class LogicExecuteAlgorithm {
         }
         System.out.println(" ");
     }
+
     //Crea la ruta apartir de closeSet
     public void generateRoute() {
         Coordinate aux = closeSet.get(closeSet.size()-1).getOrigin();
@@ -202,6 +194,7 @@ public class LogicExecuteAlgorithm {
             }
         }
         routes.add(closeSet.get(0).getCoordinate());
+        printRoute();
     }
     private void printRoute(){
         System.out.println("Route: ");
@@ -213,11 +206,9 @@ public class LogicExecuteAlgorithm {
     public ArrayList<Node> getOpenSetRegister() {
         return openSetRegister;
     }
-
     public ArrayList<Node> getCloseSet() {
         return closeSet;
     }
-
     public ArrayList<Coordinate> getRoutes() {
         return routes;
     }
