@@ -1,15 +1,20 @@
 package logic;
 
 import ui.CaptureMatrix;
+import ui.Welcome;
 
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ColorConvertOp;
+import java.util.ArrayList;
 
 public class LogicGetStartEnd implements ActionListener {
     private  boolean bStart = false, bEnd = false;
     private int data[][];
-
+    private ArrayList<Node> openSet = new ArrayList<>(),closeSet = new ArrayList<>();
+    private ArrayList<Coordinate> routes = new ArrayList<>();
     private Coordinate  start,end;
     private int i = 0;
     CaptureMatrix captureMatrix;
@@ -54,13 +59,28 @@ public class LogicGetStartEnd implements ActionListener {
             //Se obtiene las coordenadas apartir del valor x de start y end
             getCoordinates();
             captureMatrix.executeAlgoritm();
-            LogicExecuteAlgorithm logicExecuteAlgorithm = new LogicExecuteAlgorithm(start, end, data,captureMatrix.rows,captureMatrix.columns);
+            captureMatrix.btnNewMatrix.addActionListener(this);
 
+            //Ejecutamos el algoritmo y obtenemos los valores
+            LogicExecuteAlgorithm logicExecuteAlgorithm = new LogicExecuteAlgorithm(start, end, data,captureMatrix.rows,captureMatrix.columns);
+            logicExecuteAlgorithm.executeAlgorithm();
+            openSet = logicExecuteAlgorithm.getOpenSetRegister();
+            closeSet = logicExecuteAlgorithm.getCloseSet();
+            routes = logicExecuteAlgorithm.getRoutes();
+            fillTableOpenSet();
+            fillTableCloseSet();
+            captureMatrix.setRoutes(routes);
+            captureMatrix.animation();
         }//Se restablecen los colores y valores de bStart y bEnd que representan el inicio y fin
         else if (e.getSource().equals(captureMatrix.btnReset)){
             resetBackground();
             bStart = false;
             bEnd = false;
+        }else if (e.getSource().equals(captureMatrix.btnNewMatrix)){
+            System.out.println("Pasa por aqui");
+            captureMatrix.dispose();
+            Welcome welcome = new Welcome();
+            LogicWelcome logicWelcome = new LogicWelcome(welcome);
         }
     }
 
@@ -102,16 +122,43 @@ public class LogicGetStartEnd implements ActionListener {
         printCoordinatesStartEnd();
     }
 
+    //Se asignan los valores al las tablas del panel
+    public void fillTableOpenSet(){
+        DefaultTableModel openSetModel = new DefaultTableModel();
+        String[] titles ={"Coordenada","Costo","Heuristica","Total","Origen"};
+        openSetModel.setColumnIdentifiers(titles);
+        String[][] contentMatrix = new String[openSet.size()][5];
+        for (int i = 0; i < openSet.size(); i++) {
+            Node node = openSet.get(i);
+            contentMatrix[i][0] = node.getCoordinate().retunCoordinate();
+            contentMatrix[i][1] = String.valueOf(node.getCoste());
+            contentMatrix[i][2] = String.valueOf(node.getHeuristic());
+            contentMatrix[i][3] = String.valueOf(node.getTotal());
+            contentMatrix[i][4] = node.getOrigin().retunCoordinate();
+        }
+        openSetModel.setDataVector(contentMatrix,titles);
+        captureMatrix.openSet.setModel(openSetModel);
+    }
+    public void fillTableCloseSet(){
+        DefaultTableModel closeSetModel = new DefaultTableModel();
+        String[] titles ={"Coordenada","Costo","Heuristica","Total","Origen"};
+        closeSetModel.setColumnIdentifiers(titles);
+        String[][] contentMatrix = new String[closeSet.size()][5];
+        for (int i = 0; i < closeSet.size(); i++) {
+            Node node = closeSet.get(i);
+            contentMatrix[i][0] = node.getCoordinate().retunCoordinate();
+            contentMatrix[i][1] = String.valueOf(node.getCoste());
+            contentMatrix[i][2] = String.valueOf(node.getHeuristic());
+            contentMatrix[i][3] = String.valueOf(node.getTotal());
+            contentMatrix[i][4] = node.getOrigin().retunCoordinate();
+        }
+        closeSetModel.setDataVector(contentMatrix,titles);
+        captureMatrix.closSet.setModel(closeSetModel);
+    }
+
     //Imprime las coordenadas
     private void printCoordinatesStartEnd(){
         System.out.println("Coordenadas de inicio: ["+start.getX()+"]["+start.getY()+"]");
         System.out.println("Coordenadas de fin:    ["+end.getX()+"]["+end.getY()+"]");
-    }
-
-    public Coordinate getStart() {
-        return start;
-    }
-    public Coordinate getEnd() {
-        return end;
     }
 }

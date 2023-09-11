@@ -197,7 +197,7 @@ public class LogicExecuteAlgorithm {
         printRoute();
     }
     private void printRoute(){
-        System.out.println("Route: ");
+        System.out.println("Ruta: ");
         for (Coordinate coordinate : routes){
             System.out.print("("+coordinate.retunCoordinate()+")  ");
         }

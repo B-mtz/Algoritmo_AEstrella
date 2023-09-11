@@ -1,5 +1,7 @@
 package ui;
 
+import logic.Coordinate;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.AbstractDocument;
@@ -9,11 +11,13 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CaptureMatrix extends JFrame{
+public class CaptureMatrix extends JFrame implements Runnable{
     private JPanel contentPane, contentMatrix,contentCenter,contentSouth, contentNorth, contentLeft, contentRight;
     private Font font = new Font("Cascadia Code",Font.BOLD,20);
     public ArrayList<JTextField> squares = new ArrayList<>();
     public ArrayList<JButton> btnsquares = new ArrayList<>();
+
+    private ArrayList<Coordinate> routes = new ArrayList<>();
     public JButton btnFill, btnConfirm, btnReset, btnNewMatrix;
     public int rows, columns;
     public JTable openSet, closSet;
@@ -167,10 +171,6 @@ public class CaptureMatrix extends JFrame{
 
         JPanel centerContentLeft = new JPanel(new FlowLayout());
         openSet = new JTable();
-        DefaultTableModel openSetModel = new DefaultTableModel();
-        String[] titles ={"Coordenada","Costo","Heuristica","Total","Origen"};
-        openSetModel.setColumnIdentifiers(titles);
-        openSet.setModel(openSetModel);
         JScrollPane scrollOpenSet = new JScrollPane(openSet);
         centerContentLeft.add(scrollOpenSet);
         contentLeft.add(topContentLeft,BorderLayout.NORTH);
@@ -186,7 +186,6 @@ public class CaptureMatrix extends JFrame{
         JPanel centerContentRight = new JPanel(new FlowLayout());
         closSet = new JTable();
         DefaultTableModel closeSetModel = new DefaultTableModel();
-        closeSetModel.setColumnIdentifiers(titles);
         closSet.setModel(closeSetModel);
         JScrollPane scrollCloseSet = new JScrollPane(closSet);
         centerContentRight.add(scrollCloseSet);
@@ -200,5 +199,33 @@ public class CaptureMatrix extends JFrame{
         contentPane.add(contentRight, BorderLayout.EAST);
 
         this.setLocationRelativeTo(null);
+    }
+    public void setRoutes(ArrayList<Coordinate> routes) {
+        this.routes = routes;
+    }
+
+    public  void animation(){
+        Thread thread = new Thread(this);
+        thread.start();
+    }
+    @Override
+    public void run() {
+        System.out.println("\nPosición de los botones en el ArrayList: ");
+        //Pinta la ruta
+        int aux = 0;
+        int aux2 = 0;
+        for (Coordinate coordinate : routes) {
+            aux = rows * (coordinate.getX() + 1);
+            aux2 = columns - (coordinate.getY() + 1);
+            aux = (aux - aux2);
+            System.out.print("-"+aux + "-");
+            btnsquares.get(aux - 1).setBackground(Color.GRAY);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
