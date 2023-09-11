@@ -12,7 +12,5 @@ public class testAlgoritmo {
 
         LogicExecuteAlgorithm logicExecuteAlgorithm = new LogicExecuteAlgorithm(start,end,data,6,8);
         logicExecuteAlgorithm.executeAlgorithm();
-        //logicExecuteAlgorithm.printOpenSet();
-
     }
 }
