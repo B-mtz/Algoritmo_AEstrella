@@ -3,6 +3,7 @@ package logic;
 import ui.CaptureMatrix;
 import ui.Welcome;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +12,7 @@ import java.awt.image.ColorConvertOp;
 import java.util.ArrayList;
 
 public class LogicGetStartEnd implements ActionListener {
-    private  boolean bStart = false, bEnd = false;
+    private  boolean bStart = false, bEnd = false, coord;
     private int data[][];
     private ArrayList<Node> openSet = new ArrayList<>(),closeSet = new ArrayList<>();
     private ArrayList<Coordinate> routes = new ArrayList<>();
@@ -58,19 +59,21 @@ public class LogicGetStartEnd implements ActionListener {
             changeColor();
             //Se obtiene las coordenadas apartir del valor x de start y end
             getCoordinates();
-            captureMatrix.executeAlgoritm();
-            captureMatrix.btnNewMatrix.addActionListener(this);
+            if (coord == true){
+                captureMatrix.executeAlgoritm();
+                captureMatrix.btnNewMatrix.addActionListener(this);
 
-            //Ejecutamos el algoritmo y obtenemos los valores
-            LogicExecuteAlgorithm logicExecuteAlgorithm = new LogicExecuteAlgorithm(start, end, data,captureMatrix.rows,captureMatrix.columns);
-            logicExecuteAlgorithm.executeAlgorithm();
-            openSet = logicExecuteAlgorithm.getOpenSetRegister();
-            closeSet = logicExecuteAlgorithm.getCloseSet();
-            routes = logicExecuteAlgorithm.getRoutes();
-            fillTableOpenSet();
-            fillTableCloseSet();
-            captureMatrix.setRoutes(routes);
-            captureMatrix.animation();
+                //Ejecutamos el algoritmo y obtenemos los valores
+                LogicExecuteAlgorithm logicExecuteAlgorithm = new LogicExecuteAlgorithm(start, end, data,captureMatrix.rows,captureMatrix.columns);
+                logicExecuteAlgorithm.executeAlgorithm();
+                openSet = logicExecuteAlgorithm.getOpenSetRegister();
+                closeSet = logicExecuteAlgorithm.getCloseSet();
+                routes = logicExecuteAlgorithm.getRoutes();
+                fillTableOpenSet();
+                fillTableCloseSet();
+                captureMatrix.setRoutes(routes);
+                captureMatrix.animation();
+            }
         }//Se restablecen los colores y valores de bStart y bEnd que representan el inicio y fin
         else if (e.getSource().equals(captureMatrix.btnReset)){
             resetBackground();
@@ -110,16 +113,28 @@ public class LogicGetStartEnd implements ActionListener {
             for (int j = 0; j < captureMatrix.columns; j++) {
                 //Comprueba si el indice guardado coincide con aux, para guardar la coordenada en que se encuentra
                 if (aux == start.getX()){
-                    start.setX(i);
-                    start.setY(j);
+                    if (data[i][j] == 0){
+                        start.setX(i);
+                        start.setY(j);
+                        coord = true;
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Ingresa una posición de inicio valida");
+                        coord = false;
+                    }
                 }else if (aux == end.getX()){
-                    end.setX(i);
-                    end.setY(j);
+                    if (data[i][j] == 0){
+                        end.setX(i);
+                        end.setY(j);
+                        coord = true;
+                        printCoordinatesStartEnd();
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Ingresa una posición de fin valida");
+                        coord = false;
+                    }
                 }
                 aux++;
             }
         }
-        printCoordinatesStartEnd();
     }
 
     //Se asignan los valores al las tablas del panel
