@@ -148,7 +148,7 @@ public class CaptureMatrix extends JFrame implements Runnable{
         contentNorth.add(title);
 
         //Content Center
-        JLabel subTitle = new JLabel("Matriz");
+        JLabel subTitle = new JLabel("Recorrido");
         subTitle.setFont(font);
         subTitle.setForeground(Color.ORANGE);
         subTitle.setHorizontalAlignment(0);
@@ -210,19 +210,24 @@ public class CaptureMatrix extends JFrame implements Runnable{
     }
     @Override
     public void run() {
-        System.out.println("\nPosición de los botones en el ArrayList: ");
-        //Pinta la ruta
-        int aux = 0;
-        int aux2 = 0;
-        for (Coordinate coordinate : routes) {
-            aux = rows * (coordinate.getX() + 1);
-            aux2 = columns - (coordinate.getY() + 1);
-            aux = (aux - aux2);
-            System.out.print("-"+aux + "-");
-            btnsquares.get(aux - 1).setBackground(Color.GRAY);
+        for (Coordinate coordenada : routes) {
+            // Obtener las coordenadas x e y de la ruta
+            int x = coordenada.getX();
+            int y = coordenada.getY();
 
+            // Calcular el índice en el ArrayList de botones
+            int indice = x * columns + y;
+
+            // Verificar si el índice está dentro del rango válido
+            if (indice >= 0 && indice < btnsquares.size()) {
+                // Obtener el botón correspondiente al índice
+                JButton boton = btnsquares.get(indice);
+
+                // Cambiar el color de fondo del botón
+                boton.setBackground(Color.WHITE); // Cambia el color como desees
+            }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

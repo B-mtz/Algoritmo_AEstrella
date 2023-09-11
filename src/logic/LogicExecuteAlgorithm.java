@@ -9,6 +9,7 @@ public class LogicExecuteAlgorithm {
     private ArrayList<Coordinate> routes = new ArrayList<>();
     private int heuristic, coste, total, minCosteTotal;
     private int rows, columns;
+    boolean flag = true;
 
     public LogicExecuteAlgorithm(Coordinate start, Coordinate end, int[][] data, int rows, int columns) {
         this.coordinateStart = start;
@@ -19,8 +20,17 @@ public class LogicExecuteAlgorithm {
     }
     public void executeAlgorithm() {
         createNodeStart();
-        while (!openSet.isEmpty()) {
-            logic(openSet.get(0));
+        while (flag){
+            while (!openSet.isEmpty()) {
+                logic(openSet.get(0));
+            }
+            //Si no encontro el camino vuelve de nuevo tomando la ultima casilla descartada esto en caso de que la ruta sea diferente
+            if (openSet.isEmpty() && !discarded.isEmpty()){
+                for (int i =0 ; i < discarded.size(); i++){
+                    openSet.add(discarded.get(i));
+                    discarded.remove(i);
+                }
+            }
         }
         printOpenSetRegister();
         printCloseSet();
@@ -30,10 +40,10 @@ public class LogicExecuteAlgorithm {
     public void logic(Node node) {
         getMinCoste();
         if (node.getTotal() == minCosteTotal) {
-            //Si la casilla es diferente a la meta continuar
             if (node.getCoordinate().getX() == coordinateEnd.getX() && node.getCoordinate().getY() == coordinateEnd.getY()) {
                 closeSet.add(node);
                 openSet.remove(node);
+                flag = false;
             } else {
                 evaluateNodes(node);
                 closeSet.add(node);
@@ -48,36 +58,33 @@ public class LogicExecuteAlgorithm {
     //Validamos que haya espacio libre a los lados sin exceder los limites
     private void evaluateNodes(Node node) {
         int alone = 0;
-        Coordinate destiny;
-        //Derecha
-        if (node.getCoordinate().getY() + 1 < columns) {
-            destiny = new Coordinate(node.getCoordinate().getX(), node.getCoordinate().getY() + 1);
-            if (validateSpace(destiny) && node.getCoordinate().getY() + 1 < columns) {
-                //Creamos el nuevo nodo vecino
-                evaluation(node, destiny);
-            }
-        }
-        //Abajo
-        if (node.getCoordinate().getX() + 1 < rows) {
-            destiny = new Coordinate(node.getCoordinate().getX() + 1, node.getCoordinate().getY());
-            if (validateSpace(destiny) && node.getCoordinate().getX() + 1 < rows) {
-                //Creamos el nuevo nodo vecino
-                evaluation(node, destiny);
-            }
-        }
-        //Izquierda
-        if (node.getCoordinate().getY() != 0) {
-            destiny = new Coordinate(node.getCoordinate().getX(), node.getCoordinate().getY() - 1);
-            if (validateSpace(destiny) && node.getCoordinate().getY() - 1 >= 0) {
-                //Creamos el nuevo nodo vecino
-                evaluation(node, destiny);
-            }
-        }
-        //Arriba
-        if (node.getCoordinate().getX() != 0) {
+        Coordinate destiny, coAux;
+        coAux = node.getCoordinate();
+        // Up
+        if (coAux.getX() != 0) {
             destiny = new Coordinate(node.getCoordinate().getX() - 1, node.getCoordinate().getY());
-            if (validateSpace(destiny) && node.getCoordinate().getX() - 1 >= 0) {
-                //Creamos el nuevo nodo vecino
+            if (validateSpace(destiny)) {
+                evaluation(node, destiny);
+            }
+        }
+        // Right
+        if (coAux.getY() + 1 < columns) {
+            destiny = new Coordinate(node.getCoordinate().getX(), node.getCoordinate().getY() + 1);
+            if (validateSpace(destiny)) {
+                evaluation(node, destiny);
+            }
+        }
+        // Down
+        if (coAux.getX() + 1 < rows) {
+            destiny = new Coordinate(node.getCoordinate().getX() + 1, node.getCoordinate().getY());
+            if (validateSpace(destiny)) {
+                evaluation(node, destiny);
+            }
+        }
+        // Left
+        if (coAux.getY() != 0) {
+            destiny = new Coordinate(node.getCoordinate().getX(), node.getCoordinate().getY() - 1);
+            if (validateSpace(destiny)) {
                 evaluation(node, destiny);
             }
         }
@@ -85,7 +92,7 @@ public class LogicExecuteAlgorithm {
 
     //Evalua el openSet y el CloseSet
     public void evaluation(Node node, Coordinate destiny) {
-        boolean flag = false;
+        boolean flag = true;
         Node auxNode = createNode(node.getCoordinate(), destiny);
         //Se valida que no este en OpenSet, en caso de estar, se eliminar
         if (!validateOpenSet(auxNode)) {
@@ -96,10 +103,10 @@ public class LogicExecuteAlgorithm {
             } else {
                 for (Node actualNode : closeSet) {
                     if (actualNode.getCoordinate().getX() == destiny.getX() && actualNode.getCoordinate().getY() == destiny.getY()) {
-                        flag = true;
+                        flag = false;
                     }
                 }
-                if (!flag) {
+                if (flag) {
                     openSetRegister.add(auxNode);
                     openSet.add(auxNode);
                 }
@@ -169,9 +176,9 @@ public class LogicExecuteAlgorithm {
     }
 
     //imprime openSet y CloseT
-    public void printOpenSetRegister(){
-        System.out.println("Size openSet: "+openSetRegister.size());
-        for (Node node : openSetRegister){
+    public void printOpenSetDiscarded(){
+        System.out.println("Size Discarded: "+discarded.size());
+        for (Node node : discarded){
             System.out.println(node.getCoordinate().retunCoordinate()+" - "+node.getCoste()+" - "+node.getHeuristic()+" - "+node.getTotal()+" - "+node.getOrigin().retunCoordinate());
         }
     }
@@ -181,6 +188,12 @@ public class LogicExecuteAlgorithm {
             System.out.println(node.getCoordinate().retunCoordinate()+" - "+node.getCoste()+" - "+node.getHeuristic()+" - "+node.getTotal()+" - "+node.getOrigin().retunCoordinate());
         }
         System.out.println(" ");
+    }
+    public void printOpenSetRegister(){
+        System.out.println("Size openSet: "+openSetRegister.size());
+        for (Node node : openSetRegister){
+            System.out.println(node.getCoordinate().retunCoordinate()+" - "+node.getCoste()+" - "+node.getHeuristic()+" - "+node.getTotal()+" - "+node.getOrigin().retunCoordinate());
+        }
     }
 
     //Crea la ruta apartir de closeSet
