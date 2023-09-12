@@ -116,7 +116,6 @@ public class LogicGetStartEnd implements ActionListener {
                     if (data[i][j] == 0){
                         start.setX(i);
                         start.setY(j);
-                        coord = true;
                     }else{
                         JOptionPane.showMessageDialog(null,"Ingresa una posición de inicio valida");
                         coord = false;

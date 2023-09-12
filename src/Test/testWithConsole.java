@@ -3,7 +3,7 @@ package Test;
 import logic.Coordinate;
 import logic.LogicExecuteAlgorithm;
 
-public class testAlgoritmo {
+public class testWithConsole {
 
     public static void main(String[] args) {
         int data [][] = {{0,0,0,1,0,0,0,0},{0,0,0,0,0,0,1,0},{1,1,1,1,1,0,1,0},{0,0,0,0,0,0,1,0},{0,1,1,1,1,1,1,0},{0,0,0,0,0,0,0,1},};
