@@ -142,7 +142,7 @@ public class CaptureMatrix extends JFrame implements Runnable{
         contentRight.setBorder(BorderFactory.createEmptyBorder(0, 5, 15, 15));
 
         //Content North
-        JLabel title  = new JLabel("Algoritmo n*");
+        JLabel title  = new JLabel("Algoritmo A*");
         title.setFont(new Font("Cascadia Code",Font.BOLD,30));
         title.setForeground(Color.WHITE);
         contentNorth.add(title);
@@ -210,10 +210,10 @@ public class CaptureMatrix extends JFrame implements Runnable{
     }
     @Override
     public void run() {
-        for (Coordinate coordenada : routes) {
+        for (int i = routes.size()-1; i>=0; i--){
             // Obtener las coordenadas x e y de la ruta
-            int x = coordenada.getX();
-            int y = coordenada.getY();
+            int x = routes.get(i).getX();
+            int y = routes.get(i).getY();
 
             // Calcular el índice en el ArrayList de botones
             int indice = x * columns + y;
