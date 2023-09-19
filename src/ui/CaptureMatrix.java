@@ -11,15 +11,13 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class CaptureMatrix extends JFrame implements Runnable{
-    private JPanel contentPane, contentMatrix,contentCenter,contentSouth, contentNorth, contentLeft, contentRight;
-    private Font font = new Font("Cascadia Code",Font.BOLD,20), font1 = new Font("Cascadia Code",Font.BOLD,16);
+public class CaptureMatrix extends JFrame{
+    private JPanel contentPane, contentMatrix,contentCenter,contentSouth, contentNorth;
+    private Font font = new Font("Cascadia Code",Font.BOLD,20);
     private ArrayList<JTextField> squares = new ArrayList<>();
     private ArrayList<JButton> btnsquares = new ArrayList<>();
-    private ArrayList<Coordinate> routes = new ArrayList<>();
-    private JButton btnFill, btnConfirm, btnResetSelection, btnNewMatrix, btnResetContent;
+    private JButton btnFill, btnConfirm, btnResetSelection;
     private int rows, columns;
-    private JTable openSet, closedSet;
 
     //Constructor
     public CaptureMatrix(int rows, int columns){
@@ -115,6 +113,12 @@ public class CaptureMatrix extends JFrame implements Runnable{
         }
         contentCenter.add(contentMatrix, BorderLayout.CENTER);
 
+        btnResetSelection = new JButton("Restablecer");
+        btnResetSelection.setBackground(Color.ORANGE);
+        btnResetSelection.setForeground(Color.BLACK);
+        btnResetSelection.setFont(font);
+        contentSouth.add(btnResetSelection);
+
         //Content South: se añaden dos botones de accion
         btnConfirm = new JButton("Confirmar");
         btnConfirm.setBackground(Color.ORANGE);
@@ -122,132 +126,12 @@ public class CaptureMatrix extends JFrame implements Runnable{
         btnConfirm.setFont(font);
         contentSouth.add(btnConfirm);
 
-        btnResetSelection = new JButton("Restablecer");
-        btnResetSelection.setBackground(Color.ORANGE);
-        btnResetSelection.setForeground(Color.BLACK);
-        btnResetSelection.setFont(font);
-        contentSouth.add(btnResetSelection);
-
         //Se actualizan los paneles
         contentNorth.updateUI();
         contentCenter.updateUI();
         contentSouth.updateUI();
     }
 
-    //Se crean los componentes que mostraran el OpenSet, ClosedSet y el recorrido de la ruta
-    public void executeAlgoritm(){
-        //Se redimenciona el tamaño del frame y se vacia el contenido de los paneles, tambien se añaden bordes
-        this.setSize(1280,550);
-        contentNorth.removeAll();
-        contentCenter.removeAll();
-        contentSouth.removeAll();
-        contentLeft = new JPanel(new BorderLayout());
-        contentLeft.setBorder(BorderFactory.createEmptyBorder(0, 15, 15, 5));
-        contentRight = new JPanel(new BorderLayout());
-        contentRight.setBorder(BorderFactory.createEmptyBorder(0, 5, 15, 15));
-
-        //Content North : se agrega titulo
-        JLabel title  = new JLabel("Algoritmo A*");
-        title.setFont(new Font("Cascadia Code",Font.BOLD,30));
-        title.setForeground(Color.WHITE);
-        contentNorth.add(title);
-
-        //Content Center : se agrega subtitulo
-        JLabel subTitle = new JLabel("Recorrido");
-        subTitle.setFont(font);
-        subTitle.setForeground(Color.ORANGE);
-        subTitle.setHorizontalAlignment(0);
-        contentCenter.add(subTitle,BorderLayout.NORTH);
-        contentCenter.add(contentMatrix,BorderLayout.CENTER);
-
-        //Content South: Se añade un boton de accion
-        btnNewMatrix = new JButton("Nueva Matrix");
-        btnNewMatrix.setBackground(Color.ORANGE);
-        btnNewMatrix.setForeground(Color.BLACK);
-        btnNewMatrix.setFont(font1);
-        btnResetContent = new JButton("Restablecer");
-        btnResetContent.setBackground(Color.ORANGE);
-        btnResetContent.setForeground(Color.BLACK);
-        btnResetContent.setFont(font1);
-        contentSouth.add(btnResetContent);
-        contentSouth.add(btnNewMatrix);
-
-        //Content Left: se crea el titulo del contenido izquierdo
-        JPanel topContentLeft = new JPanel(new FlowLayout());
-        JLabel lbOpenSet  = new JLabel("OpenSet");
-        lbOpenSet.setFont(font);
-        lbOpenSet.setForeground(Color.ORANGE);
-        topContentLeft.add(lbOpenSet);
-        //Se crea la tabla que contendra el openSet, ubicado en el centro del panel izquierdo
-        JPanel centerContentLeft = new JPanel(new FlowLayout());
-        openSet = new JTable();
-        JScrollPane scrollOpenSet = new JScrollPane(openSet);
-        centerContentLeft.add(scrollOpenSet);
-        contentLeft.add(topContentLeft,BorderLayout.NORTH);
-        contentLeft.add(centerContentLeft,BorderLayout.CENTER);
-
-        //Content Right: se crea el titulo del contenido izuqierdo
-        JPanel topContentRigth = new JPanel(new FlowLayout());
-        JLabel lbCloseSet  = new JLabel("ClosedSet");
-        lbCloseSet.setFont(font);
-        lbCloseSet.setForeground(Color.ORANGE);
-        topContentRigth.add(lbCloseSet);
-        //Se crea la tabla que contendra el closedSet, ubicado en el centro del panel derecho
-        JPanel centerContentRight = new JPanel(new FlowLayout());
-        closedSet = new JTable();
-        DefaultTableModel closeSetModel = new DefaultTableModel();
-        closedSet.setModel(closeSetModel);
-        JScrollPane scrollCloseSet = new JScrollPane(closedSet);
-        centerContentRight.add(scrollCloseSet);
-        contentRight.add(topContentRigth, BorderLayout.NORTH);
-        contentRight.add(centerContentRight, BorderLayout.CENTER);
-
-        //Se actualizan el contenido de los paneles
-        contentNorth.updateUI();
-        contentSouth.updateUI();
-        contentCenter.updateUI();
-        // se añaden nuevos paneles: izquierdo y derecho
-        contentPane.add(contentLeft, BorderLayout.WEST);
-        contentPane.add(contentRight, BorderLayout.EAST);
-        //se establece la ubicación del centro para el contenido.
-        this.setLocationRelativeTo(null);
-    }
-
-    //Genera una animación de la ruta
-    public  void animation(){
-        Thread thread = new Thread(this);
-        thread.start();
-    }
-    //se sobreEscribe el metodo run para pintar los botones simulando el recorrido de la ruta
-    @Override
-    public void run() {
-        //Se recorre la ruta recuperrando sus coordenadas
-        for (int i = routes.size()-1; i>=0; i--){
-            // Obtener las coordenadas x, y de la ruta
-            int x = routes.get(i).getX();
-            int y = routes.get(i).getY();
-
-            // Calcular el índice en el ArrayList de botones
-            int indice = x * columns + y;
-
-            // Verificar si el índice está dentro del rango válido
-            if (indice >= 0 && indice < btnsquares.size()) {
-                // Obtener el botón correspondiente al índice
-                JButton boton = btnsquares.get(indice);
-
-                // Cambiar el color de fondo del botón
-                boton.setBackground(Color.WHITE); // Cambia el color como desees
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    public void setRoutes(ArrayList<Coordinate> routes) {
-        this.routes = routes;
-    }
 
     public ArrayList<JTextField> getSquares() {
         return squares;
@@ -269,18 +153,6 @@ public class CaptureMatrix extends JFrame implements Runnable{
         return btnResetSelection;
     }
 
-    public JButton getBtnNewMatrix() {
-        return btnNewMatrix;
-    }
-
-    public JTable getOpenSet() {
-        return openSet;
-    }
-
-    public JTable getClosedSet() {
-        return closedSet;
-    }
-
     public int getRows() {
         return rows;
     }
@@ -288,4 +160,5 @@ public class CaptureMatrix extends JFrame implements Runnable{
     public int getColumns() {
         return columns;
     }
+
 }

@@ -1,23 +1,20 @@
 package logic;
 
 import ui.CaptureMatrix;
+import ui.MainIU;
 import ui.Welcome;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class LogicGetStartEnd implements ActionListener {
     private  boolean bStart = false, bEnd = false, coord;
     private int data[][];
-    private ArrayList<Node> openSet = new ArrayList<>(),closeSet = new ArrayList<>();
-    private ArrayList<Coordinate> routes = new ArrayList<>();
     private Coordinate  start,end;
     private int i = 0;
-    CaptureMatrix captureMatrix;
+    private CaptureMatrix captureMatrix;
 
     //Constructor
     public LogicGetStartEnd(CaptureMatrix captureMatrix, int data[][]){
@@ -59,46 +56,28 @@ public class LogicGetStartEnd implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         //Al confirmar las coordenadas seleccionadas se cambia el color del texto en los botones con el indice guardado
         if (e.getSource().equals(captureMatrix.getBtnConfirm())){
-            try {
+            //Valida que se hayan ingresaron las coordedas de inicio y fin correctamente
+            if (start != null && end != null){
+                //Invierte los colores del background y el foreground
                 changeColor();
                 //Se obtiene las coordenadas apartir del valor x de start y end
                 getCoordinates();
-            }catch (Exception exception){
-            JOptionPane.showMessageDialog(null,"Selecciona un inicio y fin");
-            }
-            //Si coord es verdad, se seleccionaron las posiciones correctamente
-            if (coord == true){
-                // se ejcuta el cambio del contenido del panel: para mostrar openSet,closedSet y el recorrido de la ruta
-                captureMatrix.executeAlgoritm();
-                captureMatrix.getBtnNewMatrix().addActionListener(this);
+                //Imprime las coordenadas de inicio y fin
+                printCoordinatesStartEnd();
 
-                //Ejecutamos el algoritmo y recuperamos los valores de openSet, closedSet y las rutas
-                LogicExecuteAlgorithm logicExecuteAlgorithm = new LogicExecuteAlgorithm(start, end, data,captureMatrix.getRows(),captureMatrix.getColumns());
-                logicExecuteAlgorithm.executeAlgorithm();
-                openSet = logicExecuteAlgorithm.getOpenSetRegister();
-                closeSet = logicExecuteAlgorithm.getCloseSet();
-                routes = logicExecuteAlgorithm.getRoutes();
-                //Rellenamos las tablas de openSet y closedSet
-                fillTableOpenSet();
-                fillTableCloseSet();
-                captureMatrix.setRoutes(routes);
-                //Si finish == true, existe una ruta
-                if (logicExecuteAlgorithm.isFinish()){
-                    captureMatrix.animation();
-                }else{
-                    JOptionPane.showMessageDialog(null,"No se pudo encontrar una ruta");
-                }
+                // Se ejecuta la interfaz principal MainUI: mandandole el array de botoens y de JtextFilds
+                //en el LogicMainUi se le manda la interfaz principal, la coordenada de inicio, la coordenada de fin y los datos de la matriz
+                LogicMainUi logicMainUi = new LogicMainUi(new MainIU(captureMatrix.getBtnsquares(), captureMatrix.getRows(), captureMatrix.getColumns()),
+                        start,end,data);
+                captureMatrix.dispose();
+            }else {
+                JOptionPane.showMessageDialog(null,"Selecciona un inicio y fin");
             }
         }//Se restablecen los colores y valores de bStart y bEnd que representan la seleccion de inicio y fin
         else if (e.getSource().equals(captureMatrix.getBtnResetSelection())){
             resetBackground();
             bStart = false;
             bEnd = false;
-        }//Se vuelve a llamar a la ventana para recuperar el tamaño del arreglo y se cierra esta ventana
-        else if (e.getSource().equals(captureMatrix.getBtnNewMatrix())){
-            captureMatrix.dispose();
-            Welcome welcome = new Welcome();
-            LogicWelcome logicWelcome = new LogicWelcome(welcome);
         }
     }
 
@@ -132,6 +111,7 @@ public class LogicGetStartEnd implements ActionListener {
                     }else{
                         JOptionPane.showMessageDialog(null,"Ingresa una posición de inicio valida");
                         coord = false;//Se asigna un valor a coord indicando que no se selecciono una posicion valida
+                        break;
                     }
                 }else if (aux == end.getX()){
                     if (data[i][j] == 0){
@@ -141,48 +121,12 @@ public class LogicGetStartEnd implements ActionListener {
                     }else{
                         JOptionPane.showMessageDialog(null,"Ingresa una posición de fin valida");
                         coord = false;//Se asigna un valor a coord indicando que no se selecciono una posicion valida
+                        break;
                     }
                 }
                 aux++;
             }
         }
-        //Imprime las coordenadas de inicio y fin
-        printCoordinatesStartEnd();
-    }
-
-    //Se asignan los valores al la tabla OpenSet del panel izquierdo
-    public void fillTableOpenSet(){
-        DefaultTableModel openSetModel = new DefaultTableModel();
-        String[] titles ={"Coordenada","Costo","Heuristica","Total","Origen"};
-        openSetModel.setColumnIdentifiers(titles);
-        String[][] contentMatrix = new String[openSet.size()][5];
-        for (int i = 0; i < openSet.size(); i++) {
-            Node node = openSet.get(i);
-            contentMatrix[i][0] = node.getCoordinate().retunCoordinate();
-            contentMatrix[i][1] = String.valueOf(node.getCoste());
-            contentMatrix[i][2] = String.valueOf(node.getHeuristic());
-            contentMatrix[i][3] = String.valueOf(node.getTotal());
-            contentMatrix[i][4] = node.getOrigin().retunCoordinate();
-        }
-        openSetModel.setDataVector(contentMatrix,titles);
-        captureMatrix.getOpenSet().setModel(openSetModel);
-    }
-    //Se asignan los valores al la tabla ClosedSet del panel derecho
-    public void fillTableCloseSet(){
-        DefaultTableModel closeSetModel = new DefaultTableModel();
-        String[] titles ={"Coordenada","Costo","Heuristica","Total","Origen"};
-        closeSetModel.setColumnIdentifiers(titles);
-        String[][] contentMatrix = new String[closeSet.size()][5];
-        for (int i = 0; i < closeSet.size(); i++) {
-            Node node = closeSet.get(i);
-            contentMatrix[i][0] = node.getCoordinate().retunCoordinate();
-            contentMatrix[i][1] = String.valueOf(node.getCoste());
-            contentMatrix[i][2] = String.valueOf(node.getHeuristic());
-            contentMatrix[i][3] = String.valueOf(node.getTotal());
-            contentMatrix[i][4] = node.getOrigin().retunCoordinate();
-        }
-        closeSetModel.setDataVector(contentMatrix,titles);
-        captureMatrix.getClosedSet().setModel(closeSetModel);
     }
 
     //Imprime las coordenadas

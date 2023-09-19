@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 public class LogicCaptureMatrix implements ActionListener {
     private CaptureMatrix captureMatrix;
     private int data[][];
-    private Coordinate  start,end;
-    private int rows, columns;
     //Constructor
     public LogicCaptureMatrix(CaptureMatrix captureMatrix){
         this.captureMatrix = captureMatrix;
