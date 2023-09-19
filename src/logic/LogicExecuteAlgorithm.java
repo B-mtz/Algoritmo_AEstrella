@@ -7,10 +7,10 @@ public class LogicExecuteAlgorithm {
     private int[][] data;
     private ArrayList<Node> openSet = new ArrayList<>(),openSetRegister = new ArrayList<>(),closeSet = new ArrayList<>(),discarded = new ArrayList<>();
     private ArrayList<Coordinate> routes = new ArrayList<>();
-    private int heuristic, coste, total, minCosteTotal;
+    private int heuristic, coste, total;
     private int rows, columns;
-    boolean flagEnd = true, finish = true;
-
+    public boolean flagEnd = true, finish = true;
+    private  Node minCosteTotal;
     public LogicExecuteAlgorithm(Coordinate start, Coordinate end, int[][] data, int rows, int columns) {
         this.coordinateStart = start;
         this.coordinateEnd = end;
@@ -21,18 +21,18 @@ public class LogicExecuteAlgorithm {
     public void executeAlgorithm() {
         createNodeStart();
         while (flagEnd){
-            while (!openSet.isEmpty()) {
-                logic(openSet.get(0));
-            }
+            logic();
             //Si no encontro el camino vuelve de nuevo tomando la ultima casilla descartada esto en caso de que la ruta sea diferente
-            if (openSet.isEmpty() && !discarded.isEmpty()){
-                for (int i =0 ; i < discarded.size(); i++){
-                    openSet.add(discarded.get(i));
-                    discarded.remove(i);
+            if (openSet.isEmpty()){
+                System.out.println("OpenSet size: "+openSet.size()+"  discarded.Size: "+discarded.size());
+                if (closeSet.get(closeSet.size()-1).getHeuristic()==0){
+                    flagEnd = false;
+                    finish = true;
+                }else{
+                    finish = false;
+                    flagEnd = false;
                 }
-            }else {
-                flagEnd = false;
-                finish = false;
+
             }
         }
         printOpenSetRegister();
@@ -40,32 +40,26 @@ public class LogicExecuteAlgorithm {
         generateRoute();
     }
 
-    public void logic(Node node) {
-        getMinCoste();
-        if (node.getTotal() == minCosteTotal) {
-            if (node.getCoordinate().getX() == coordinateEnd.getX() && node.getCoordinate().getY() == coordinateEnd.getY()) {
-                closeSet.add(node);
-                openSet.remove(node);
-                flagEnd = false;
-                finish = true;
-            } else {
-                evaluateNodes(node);
-                closeSet.add(node);
-                openSet.remove(node);
-            }
+    public void logic() {
+        Node node = getMinCoste();
+        if (node.getHeuristic() == 0) {
+            closeSet.add(node);
+            openSet.remove(node);
+            flagEnd = false;
+            finish = true;
         } else {
-            discarded.add(node);
+            evaluateNodes(node);
+            closeSet.add(node);
             openSet.remove(node);
         }
     }
 
     //Validamos que haya espacio libre a los lados sin exceder los limites
     private void evaluateNodes(Node node) {
-        int alone = 0;
         Coordinate destiny, coAux;
         coAux = node.getCoordinate();
         // Up
-        if (coAux.getX() != 0) {
+        if (coAux.getX()-1 >= 0) {
             destiny = new Coordinate(node.getCoordinate().getX() - 1, node.getCoordinate().getY());
             if (validateSpace(destiny)) {
                 evaluation(node, destiny);
@@ -86,7 +80,7 @@ public class LogicExecuteAlgorithm {
             }
         }
         // Left
-        if (coAux.getY() != 0) {
+        if (coAux.getY()-1 >= 0 ) {
             destiny = new Coordinate(node.getCoordinate().getX(), node.getCoordinate().getY() - 1);
             if (validateSpace(destiny)) {
                 evaluation(node, destiny);
@@ -106,7 +100,7 @@ public class LogicExecuteAlgorithm {
                 openSetRegister.add(auxNode);
             } else {
                 for (Node actualNode : closeSet) {
-                    if (actualNode.getCoordinate().getX() == destiny.getX() && actualNode.getCoordinate().getY() == destiny.getY()) {
+                    if (actualNode.getCoordinate().getX() == auxNode.getCoordinate().getX() && actualNode.getCoordinate().getY() == auxNode.getCoordinate().getY()) {
                         flag = false;
                     }
                 }
@@ -163,13 +157,14 @@ public class LogicExecuteAlgorithm {
         return new Node(destiny, coste, heuristic, total, origin);
     }
     //Obtiene el coste minimo
-    private void getMinCoste(){
-        minCosteTotal = Integer.MAX_VALUE;
+    private Node  getMinCoste(){
+        minCosteTotal = openSet.get(0);
         for (Node node : openSet) {
-            if (node.getTotal() < minCosteTotal) {
-                minCosteTotal = node.getTotal();
+            if (node.getTotal() < minCosteTotal.getTotal()) {
+                minCosteTotal = node;
             }
         }
+        return minCosteTotal;
     }
     //Calcula la heuristica
     private int calulateHeuristic(Coordinate origin, Coordinate destiny){
@@ -180,12 +175,6 @@ public class LogicExecuteAlgorithm {
     }
 
     //imprime openSet y CloseT
-    public void printOpenSetDiscarded(){
-        System.out.println("Size Discarded: "+discarded.size());
-        for (Node node : discarded){
-            System.out.println(node.getCoordinate().retunCoordinate()+" - "+node.getCoste()+" - "+node.getHeuristic()+" - "+node.getTotal()+" - "+node.getOrigin().retunCoordinate());
-        }
-    }
     public void printCloseSet(){
         System.out.println("Size CloseSet: "+closeSet.size());
         for (Node node : closeSet){
@@ -194,8 +183,8 @@ public class LogicExecuteAlgorithm {
         System.out.println(" ");
     }
     public void printOpenSetRegister(){
-        System.out.println("Size openSet: "+openSetRegister.size());
-        for (Node node : openSetRegister){
+        System.out.println("Size openSet: "+openSet.size());
+        for (Node node : openSet){
             System.out.println(node.getCoordinate().retunCoordinate()+" - "+node.getCoste()+" - "+node.getHeuristic()+" - "+node.getTotal()+" - "+node.getOrigin().retunCoordinate());
         }
     }
@@ -214,13 +203,14 @@ public class LogicExecuteAlgorithm {
         printRoute();
     }
     private void printRoute(){
-        if (!flagEnd){
+        if (finish){
             System.out.println("Ruta: ");
             for (Coordinate coordinate : routes){
                 System.out.print("("+coordinate.retunCoordinate()+")  ");
             }
         }else{
             System.out.println("No se pudo llegar a la meta");
+            System.out.println("\nCreado por: Bernardo Martinez \nGithub:B-mtz: https://github.com/B-mtz/Algoritmo_AEstrella");
         }
 
     }

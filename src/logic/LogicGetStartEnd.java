@@ -89,7 +89,6 @@ public class LogicGetStartEnd implements ActionListener {
             bStart = false;
             bEnd = false;
         }else if (e.getSource().equals(captureMatrix.btnNewMatrix)){
-            System.out.println("Pasa por aqui");
             captureMatrix.dispose();
             Welcome welcome = new Welcome();
             LogicWelcome logicWelcome = new LogicWelcome(welcome);
@@ -134,7 +133,6 @@ public class LogicGetStartEnd implements ActionListener {
                         end.setX(i);
                         end.setY(j);
                         coord = true;
-                        printCoordinatesStartEnd();
                     }else{
                         JOptionPane.showMessageDialog(null,"Ingresa una posición de fin valida");
                         coord = false;
@@ -143,6 +141,7 @@ public class LogicGetStartEnd implements ActionListener {
                 aux++;
             }
         }
+        printCoordinatesStartEnd();
     }
 
     //Se asignan los valores al las tablas del panel
