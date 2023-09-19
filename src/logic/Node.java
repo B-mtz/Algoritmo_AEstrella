@@ -11,7 +11,6 @@ public class Node {
         this.origin = origin;
     }
 
-
     public Coordinate getCoordinate() {
         return coordinate;
     }
@@ -32,23 +31,12 @@ public class Node {
         return coste;
     }
 
-    public void setCoste(int coste) {
-        this.coste = coste;
-    }
-
     public int getHeuristic() {
         return heuristic;
-    }
-
-    public void setHeuristic(int heuristic) {
-        this.heuristic = heuristic;
     }
 
     public int getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
-    }
 }

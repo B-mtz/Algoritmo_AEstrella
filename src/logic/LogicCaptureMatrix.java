@@ -7,21 +7,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LogicCaptureMatrix implements ActionListener {
-    CaptureMatrix captureMatrix;
-    int data[][];
+    private CaptureMatrix captureMatrix;
+    private int data[][];
     private Coordinate  start,end;
     private int rows, columns;
+    //Constructor
     public LogicCaptureMatrix(CaptureMatrix captureMatrix){
         this.captureMatrix = captureMatrix;
-        this.captureMatrix.btnFill.addActionListener(this);
+        this.captureMatrix.getBtnFill().addActionListener(this);
         //Se le asigna el tamaño a la matriz de datos
-        data = new int[captureMatrix.rows][captureMatrix.columns];
+        data = new int[captureMatrix.getRows()][captureMatrix.getColumns()];
     }
 
+    //Eventos de botoenes
     @Override
     public void actionPerformed(ActionEvent e) {
         //Efectua la accion para btnFill
-        if (e.getSource().equals(captureMatrix.btnFill)){
+        if (e.getSource().equals(captureMatrix.getBtnFill())){
             //Si el metodo retorna true, los datos ingresados son correctos
             if (validateData()){
                 //Imprime los valores ingresados en los JTexField contenidos en el ArrayList Squares
@@ -42,15 +44,15 @@ public class LogicCaptureMatrix implements ActionListener {
         //Compruba que no exista excepción al parsear el valor ingresado a int
         try {
             //Recorre el ArrayList Square
-            for (int i= 0; i<captureMatrix.rows*captureMatrix.columns;i++){
+            for (int i= 0; i<captureMatrix.getRows()*captureMatrix.getColumns();i++){
                 //Verifica que no exista campos vacios
-                if (captureMatrix.squares.get(i).getText().isEmpty()){
+                if (captureMatrix.getSquares().get(i).getText().isEmpty()){
                     flag = false;
                     JOptionPane.showMessageDialog(null,"Rellena todos los campos");
                     break;
                 }else {
                     //Recupera el valor convirtiendolo en int
-                    int aux = Integer.parseInt(captureMatrix.squares.get(i).getText());
+                    int aux = Integer.parseInt(captureMatrix.getSquares().get(i).getText());
                     //Comprueba que solo se ingresen 1s o 0s
                     if (aux == 1 || aux == 0){
                         flag = true;
@@ -63,17 +65,17 @@ public class LogicCaptureMatrix implements ActionListener {
             }
         }catch (Exception exception){
             flag = false;
-            JOptionPane.showMessageDialog(null,"Solo se permiten numeros: "+exception);
+            JOptionPane.showMessageDialog(null,"Solo se permiten numeros: ");
         }
         return flag;
     }
-    //Rellena la matriz data con los datos del ArrayList Squares
+    //Rellena la matriz data con los datos del ArrayList Squares y los imprime en consola
     public void fillMatrix(){
         int count= 0;
         System.out.println("\nMatriz rellenada: ");
-        for (int i = 0; i< captureMatrix.rows; i++){
-            for (int j = 0; j<captureMatrix.columns; j++){
-                data[i][j] = Integer.parseInt(captureMatrix.squares.get(count).getText());
+        for (int i = 0; i< captureMatrix.getRows(); i++){
+            for (int j = 0; j<captureMatrix.getColumns(); j++){
+                data[i][j] = Integer.parseInt(captureMatrix.getSquares().get(count).getText());
                 count++;
                 System.out.print("["+data[i][j]+"]");
             }
@@ -84,8 +86,8 @@ public class LogicCaptureMatrix implements ActionListener {
     //Imprime los datos de los JTextField contenidos en el ArrayList Squares
     public void printSquares(){
         System.out.println("\nValores del arrayList Squares: ");
-        for (int i= 0; i<captureMatrix.rows*captureMatrix.columns;i++){
-            System.out.print("["+captureMatrix.squares.get(i).getText()+"]");
+        for (int i= 0; i<captureMatrix.getRows()*captureMatrix.getColumns();i++){
+            System.out.print("["+captureMatrix.getSquares().get(i).getText()+"]");
         }
         System.out.println(" ");
     }
