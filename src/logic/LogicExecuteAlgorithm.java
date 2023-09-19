@@ -9,7 +9,7 @@ public class LogicExecuteAlgorithm {
     private ArrayList<Coordinate> routes = new ArrayList<>();
     private int heuristic, coste, total, minCosteTotal;
     private int rows, columns;
-    boolean flag = true;
+    boolean flagEnd = true, finish = true;
 
     public LogicExecuteAlgorithm(Coordinate start, Coordinate end, int[][] data, int rows, int columns) {
         this.coordinateStart = start;
@@ -20,7 +20,7 @@ public class LogicExecuteAlgorithm {
     }
     public void executeAlgorithm() {
         createNodeStart();
-        while (flag){
+        while (flagEnd){
             while (!openSet.isEmpty()) {
                 logic(openSet.get(0));
             }
@@ -30,6 +30,9 @@ public class LogicExecuteAlgorithm {
                     openSet.add(discarded.get(i));
                     discarded.remove(i);
                 }
+            }else {
+                flagEnd = false;
+                finish = false;
             }
         }
         printOpenSetRegister();
@@ -43,7 +46,8 @@ public class LogicExecuteAlgorithm {
             if (node.getCoordinate().getX() == coordinateEnd.getX() && node.getCoordinate().getY() == coordinateEnd.getY()) {
                 closeSet.add(node);
                 openSet.remove(node);
-                flag = false;
+                flagEnd = false;
+                finish = true;
             } else {
                 evaluateNodes(node);
                 closeSet.add(node);
@@ -210,10 +214,15 @@ public class LogicExecuteAlgorithm {
         printRoute();
     }
     private void printRoute(){
-        System.out.println("Ruta: ");
-        for (Coordinate coordinate : routes){
-            System.out.print("("+coordinate.retunCoordinate()+")  ");
+        if (!flagEnd){
+            System.out.println("Ruta: ");
+            for (Coordinate coordinate : routes){
+                System.out.print("("+coordinate.retunCoordinate()+")  ");
+            }
+        }else{
+            System.out.println("No se pudo llegar a la meta");
         }
+
     }
 
     public ArrayList<Node> getOpenSetRegister() {
@@ -224,6 +233,10 @@ public class LogicExecuteAlgorithm {
     }
     public ArrayList<Coordinate> getRoutes() {
         return routes;
+    }
+
+    public boolean isFlagEnd() {
+        return flagEnd;
     }
 }
 

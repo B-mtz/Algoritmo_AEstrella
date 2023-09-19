@@ -56,9 +56,14 @@ public class LogicGetStartEnd implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         //Al confirmar las coordenadas seleccionadas se cambia el color del texto en los botones con el indice guardado
         if (e.getSource().equals(captureMatrix.btnConfirm)){
-            changeColor();
-            //Se obtiene las coordenadas apartir del valor x de start y end
-            getCoordinates();
+            try {
+                changeColor();
+                //Se obtiene las coordenadas apartir del valor x de start y end
+                getCoordinates();
+            }catch (Exception exception){
+            JOptionPane.showMessageDialog(null,"Selecciona un inicio y fin");
+            }
+
             if (coord == true){
                 captureMatrix.executeAlgoritm();
                 captureMatrix.btnNewMatrix.addActionListener(this);
@@ -72,7 +77,11 @@ public class LogicGetStartEnd implements ActionListener {
                 fillTableOpenSet();
                 fillTableCloseSet();
                 captureMatrix.setRoutes(routes);
-                captureMatrix.animation();
+                if (logicExecuteAlgorithm.finish){
+                    captureMatrix.animation();
+                }else{
+                    JOptionPane.showMessageDialog(null,"No se pudo encontrar una ruta corta");
+                }
             }
         }//Se restablecen los colores y valores de bStart y bEnd que representan el inicio y fin
         else if (e.getSource().equals(captureMatrix.btnReset)){
