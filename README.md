@@ -10,16 +10,15 @@
 
 ## EJecución
 ### Se idica el tamaño de la matriz
-![image](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/c54d9036-b900-4f08-a573-9be2dcad889e)
+![Captura de pantalla 2023-09-20 004936](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/9230def2-6bcd-4fae-83ed-e06a0fa8bb13)
+
 ### Se rellena la Matriz con 0 y 1
-![image](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/3306600c-b1aa-4d64-bb26-370fede0ee20)
-![image](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/ca412a1f-6573-4002-9f83-3c03d22a4538)
+![Captura de pantalla 2023-09-20 010557](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/9c62c997-0994-40bb-9296-9b98e5c6f123)
 
 ### Se selecciona el inicio y despues el fin
-![image](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/e81de129-6dab-4aea-b83e-1e8043924d39)
+![Captura de pantalla 2023-09-20 005242](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/a9d61151-b392-4954-a760-30c24b481dc2)
 
 ## Se ejecuta el algoritmo y muestra el recorrido de la ruta
-![image](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/32f8c5e1-f806-4fd6-97b4-5dc4571f80f3)
-![image](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/bfe79f21-32ab-4fee-89bf-cfd3f5bfbb68)
+![Captura de pantalla 2023-09-20 005302](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/76194789-c411-4aad-94a6-85fbf0ae64b0)
 
 
