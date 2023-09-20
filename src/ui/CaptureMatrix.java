@@ -132,6 +132,12 @@ public class CaptureMatrix extends JFrame{
         contentSouth.updateUI();
     }
 
+    //Asigna los valores enviados a los JTextField para poder editarlos
+    public void setSquares(ArrayList<JTextField> squares){
+        for (int i =0; i<squares.size();i++){
+            this.squares.get(i).setText(squares.get(i).getText());
+        }
+    }
 
     public ArrayList<JTextField> getSquares() {
         return squares;

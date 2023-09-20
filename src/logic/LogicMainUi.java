@@ -1,10 +1,12 @@
 package logic;
 
+import ui.CaptureMatrix;
 import ui.MainIU;
 import ui.Welcome;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -15,13 +17,14 @@ public class LogicMainUi implements ActionListener {
     private Coordinate  start,end;
     private MainIU mainIU;
     private int data[][];
-    public LogicMainUi(MainIU mainIU,Coordinate start,Coordinate end, int[][] data){
+    public LogicMainUi(MainIU mainIU,Coordinate start,Coordinate end, int[][] data, Coordinate paintStartEnd){
         this.start = start;
         this.end = end;
         this.data = data;
         this.mainIU = mainIU;
         mainIU.getBtnNewMatrix().addActionListener(this);
         mainIU.getBtnResetContent().addActionListener(this);
+        mainIU.changeColor(paintStartEnd);
         executeAlgorithm();
     }
 
@@ -80,7 +83,6 @@ public class LogicMainUi implements ActionListener {
         closeSetModel.setDataVector(contentMatrix,titles);
         mainIU.getClosedSet().setModel(closeSetModel);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         //Se vuelve a llamar a la ventana welcome para recuperar el tamaño del arreglo y se cierra esta ventana
@@ -88,6 +90,11 @@ public class LogicMainUi implements ActionListener {
             mainIU.dispose();
             Welcome welcome = new Welcome();
             LogicWelcome logicWelcome = new LogicWelcome(welcome);
+        }else if (e.getSource().equals(mainIU.getBtnResetContent())){
+            mainIU.dispose();
+            CaptureMatrix captureMatrix = new CaptureMatrix(mainIU.getRows(),mainIU.getColumns());
+            captureMatrix.setSquares(mainIU.getSquares());
+            LogicCaptureMatrix logicCaptureMatrix = new LogicCaptureMatrix(captureMatrix);
         }
     }
 }

@@ -73,7 +73,7 @@ public class Welcome extends JFrame{
         });
 
         //Se crea el boton para crear la matriz
-        create = new JButton("Create");
+        create = new JButton("Crear");
         create.setFont(font);
         create.setBackground(Color.ORANGE);
         create.setForeground(Color.BLACK);

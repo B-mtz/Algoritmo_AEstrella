@@ -38,6 +38,7 @@ public class LogicCaptureMatrix implements ActionListener {
 
     //Valida que los datos ingresados sean 1s, 0s o que no este vacio
     public boolean validateData(){
+        int  movementSpace = 0;
         boolean flag= false;
         //Compruba que no exista excepción al parsear el valor ingresado a int
         try {
@@ -53,6 +54,10 @@ public class LogicCaptureMatrix implements ActionListener {
                     int aux = Integer.parseInt(captureMatrix.getSquares().get(i).getText());
                     //Comprueba que solo se ingresen 1s o 0s
                     if (aux == 1 || aux == 0){
+                        //valida cuantos espacios hay para moverse en la matriz
+                        if (aux == 0){
+                            movementSpace++;
+                        }
                         flag = true;
                     }else{
                         flag = false;
@@ -64,6 +69,13 @@ public class LogicCaptureMatrix implements ActionListener {
         }catch (Exception exception){
             flag = false;
             JOptionPane.showMessageDialog(null,"Solo se permiten numeros: ");
+        }
+        //Valida que existan mas de 2 espacios para moverse en la matriz
+        if (movementSpace >2){
+            flag = true;
+        }else {
+            JOptionPane.showMessageDialog(null,"Ingresa al menos 3 0s");
+            flag = false;
         }
         return flag;
     }

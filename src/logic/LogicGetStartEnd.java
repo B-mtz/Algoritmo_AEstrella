@@ -10,16 +10,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LogicGetStartEnd implements ActionListener {
-    private  boolean bStart = false, bEnd = false, coord;
+    private  boolean bStart = false, bEnd = false;
     private int data[][];
-    private Coordinate  start,end;
+    private Coordinate  start,end, paintStartEnd;
     private int i = 0;
     private CaptureMatrix captureMatrix;
+    private  MainIU mainIU;
 
     //Constructor
     public LogicGetStartEnd(CaptureMatrix captureMatrix, int data[][]){
         this.captureMatrix = captureMatrix;
         this.data = data;
+        this.paintStartEnd = new Coordinate(0,0);
         captureMatrix.getBtnConfirm().addActionListener(this);
         captureMatrix.getBtnResetSelection().addActionListener(this);
         captureAction();
@@ -56,22 +58,20 @@ public class LogicGetStartEnd implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         //Al confirmar las coordenadas seleccionadas se cambia el color del texto en los botones con el indice guardado
         if (e.getSource().equals(captureMatrix.getBtnConfirm())){
-            //Valida que se hayan ingresaron las coordedas de inicio y fin correctamente
-            if (start != null && end != null){
-                //Invierte los colores del background y el foreground
-                changeColor();
-                //Se obtiene las coordenadas apartir del valor x de start y end
-                getCoordinates();
-                //Imprime las coordenadas de inicio y fin
-                printCoordinatesStartEnd();
-
-                // Se ejecuta la interfaz principal MainUI: mandandole el array de botoens y de JtextFilds
-                //en el LogicMainUi se le manda la interfaz principal, la coordenada de inicio, la coordenada de fin y los datos de la matriz
-                LogicMainUi logicMainUi = new LogicMainUi(new MainIU(captureMatrix.getBtnsquares(), captureMatrix.getRows(), captureMatrix.getColumns()),
-                        start,end,data);
-                captureMatrix.dispose();
-            }else {
-                JOptionPane.showMessageDialog(null,"Selecciona un inicio y fin");
+            if (start!= null && end != null){
+                //Valida que se hayan ingresaron las coordedas de inicio y fin correctamente
+                if (getCoordinates()){
+                    //Imprime las coordenadas de inicio y fin
+                    printCoordinatesStartEnd();
+                    // Se ejecuta la interfaz principal MainUI: mandandole el array de botoens y de JtextFilds
+                    mainIU = new MainIU(captureMatrix.getBtnsquares(), captureMatrix.getSquares(),captureMatrix.getRows(), captureMatrix.getColumns());
+                    //en el LogicMainUi se le manda la interfaz principal, la coordenada de inicio, la coordenada de fin y los datos de la matriz
+                    LogicMainUi logicMainUi = new LogicMainUi( mainIU,start,end,data,paintStartEnd);
+                    //cambia los colores de inicio y fin
+                    captureMatrix.dispose();
+                }
+            }else{
+                JOptionPane.showMessageDialog(null,"Ingresa una pocicion de inicio y fin");
             }
         }//Se restablecen los colores y valores de bStart y bEnd que representan la seleccion de inicio y fin
         else if (e.getSource().equals(captureMatrix.getBtnResetSelection())){
@@ -87,46 +87,51 @@ public class LogicGetStartEnd implements ActionListener {
             captureMatrix.getBtnsquares().get(i).setBackground(Color.DARK_GRAY);
             captureMatrix.getBtnsquares().get(i).setForeground(Color.ORANGE);
         }
-    }
-    //Pasa el color de fondo al color del texto del inicio y fin
-    private void changeColor(){
-        captureMatrix.getBtnsquares().get(start.getX()).setBackground(Color.DARK_GRAY);
-        captureMatrix.getBtnsquares().get(start.getX()).setForeground(Color.GREEN);
-        captureMatrix.getBtnsquares().get(end.getX()).setBackground(Color.DARK_GRAY);
-        captureMatrix.getBtnsquares().get(end.getX()).setForeground(Color.RED);
+        start = null;
+        end = null;
     }
 
     //Se obtiene las coordendas de inicio y fin , apartir de x de start y end
-    private void getCoordinates(){
+    private boolean getCoordinates(){
         //comprueba con el aux el indice del inicio y fin para obtener las coordenadas
         int aux =0;
+        boolean  s= false,e= false, correct = false;
         //recorre el arreglo simulando un Matriz
-        for (int i = 0; i < captureMatrix.getRows(); i++) {
+        for (i = 0; i < captureMatrix.getRows(); i++) {
             for (int j = 0; j < captureMatrix.getColumns(); j++) {
                 //Comprueba si el indice guardado coincide con aux, para guardar la coordenada en que se encuentra
                 if (aux == start.getX()){
                     if (data[i][j] == 0){
+                        //Guarda la posición del boton de inicio en X de paintStarEnd
+                        paintStartEnd.setX(start.getX());
                         start.setX(i);
                         start.setY(j);
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Ingresa una posición de inicio valida");
-                        coord = false;//Se asigna un valor a coord indicando que no se selecciono una posicion valida
-                        break;
+                        s = true;
                     }
                 }else if (aux == end.getX()){
                     if (data[i][j] == 0){
+                        //Guarda la posición del boton de fin en Y de paintStarEnd
+                        paintStartEnd.setY(end.getX());
                         end.setX(i);
                         end.setY(j);
-                        coord = true;
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Ingresa una posición de fin valida");
-                        coord = false;//Se asigna un valor a coord indicando que no se selecciono una posicion valida
-                        break;
+                        e = true;
                     }
+                }
+                if (s && e){
+                    correct =true;
+                    break;
                 }
                 aux++;
             }
         }
+        if (!s){
+            JOptionPane.showMessageDialog(null,"Ingresa una posicion de incio valida");
+        }
+        if (!e){
+            JOptionPane.showMessageDialog(null,"Ingresa una posicion de fin valida");
+        }
+
+        return correct;
     }
 
     //Imprime las coordenadas

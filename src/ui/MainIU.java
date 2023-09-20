@@ -17,7 +17,7 @@ public class MainIU extends JFrame implements Runnable{
     private ArrayList<JTextField> squares;
     private ArrayList<Coordinate> routes = new ArrayList<>();
     //Constructor
-    public MainIU(ArrayList<JButton> btnsquares, int rows, int columns){
+    public MainIU(ArrayList<JButton> btnsquares,ArrayList<JTextField> squares, int rows, int columns){
         contentPane = new JPanel(new BorderLayout());
         this.setContentPane(contentPane);
         this.setSize(1280,550);
@@ -129,6 +129,13 @@ public class MainIU extends JFrame implements Runnable{
         contentRight.add(topContentRigth, BorderLayout.NORTH);
         contentRight.add(centerContentRight, BorderLayout.CENTER);
     }
+    //Pasa el color de fondo al color del texto del inicio y fin
+    public void changeColor(Coordinate paintStartEnd ){
+        btnsquares.get(paintStartEnd.getX()).setBackground(Color.DARK_GRAY);
+        btnsquares.get(paintStartEnd.getX()).setForeground(Color.GREEN);
+        btnsquares.get(paintStartEnd.getY()).setBackground(Color.DARK_GRAY);
+        btnsquares.get(paintStartEnd.getY()).setForeground(Color.RED);
+    }
 
     //Genera una animación de la ruta
     public  void animation(){
@@ -191,4 +198,7 @@ public class MainIU extends JFrame implements Runnable{
         return closedSet;
     }
 
+    public ArrayList<JTextField> getSquares() {
+        return squares;
+    }
 }
