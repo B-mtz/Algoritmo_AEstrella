@@ -6,7 +6,6 @@ import ui.Welcome;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -93,6 +92,7 @@ public class LogicMainUi implements ActionListener {
         }else if (e.getSource().equals(mainIU.getBtnResetContent())){
             mainIU.dispose();
             CaptureMatrix captureMatrix = new CaptureMatrix(mainIU.getRows(),mainIU.getColumns());
+            //Se mandan a editar los JtextField con los datos que se estan evaluando
             captureMatrix.setSquares(mainIU.getSquares());
             LogicCaptureMatrix logicCaptureMatrix = new LogicCaptureMatrix(captureMatrix);
         }

@@ -2,7 +2,6 @@ package logic;
 
 import ui.CaptureMatrix;
 import ui.MainIU;
-import ui.Welcome;
 
 import javax.swing.*;
 import java.awt.*;

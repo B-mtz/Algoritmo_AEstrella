@@ -5,7 +5,12 @@ import logic.Coordinate;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.net.URI;
 
 public class MainIU extends JFrame implements Runnable{
     private JPanel contentPane,contentNorth,contentCenter,contentSouth,contentLeft,contentRight, contentMatrix;
@@ -33,7 +38,7 @@ public class MainIU extends JFrame implements Runnable{
         contentSouth = new JPanel();
         contentSouth.setBorder(BorderFactory.createEmptyBorder(0, 5, 20, 5));;
         contentLeft = new JPanel(new BorderLayout());
-        contentLeft.setBorder(BorderFactory.createEmptyBorder(0, 15, 15, 5));
+        contentLeft.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 5));
         contentRight = new JPanel(new BorderLayout());
         contentRight.setBorder(BorderFactory.createEmptyBorder(0, 5, 15, 15));
 
@@ -108,8 +113,38 @@ public class MainIU extends JFrame implements Runnable{
         openSet = new JTable();
         JScrollPane scrollOpenSet = new JScrollPane(openSet);
         centerContentLeft.add(scrollOpenSet);
+
+        //Se crea un label para el link
+        JLabel lbAutor = new JLabel("  Autor: https://github.com/B-mtz");
+        lbAutor.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lbAutor.setForeground(Color.gray);
+        // Agrega un MouseListener al JLabel para abrir el enlace cuando se hace clic
+        lbAutor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    // Abre el enlace en el navegador web predeterminado
+                    Desktop.getDesktop().browse(new URI("https://github.com/B-mtz"));
+                } catch (IOException | URISyntaxException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Cambia el color del texto cuando el ratón entra
+                lbAutor.setForeground(Color.ORANGE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                // Restaura el color del texto cuando el ratón sale
+                lbAutor.setForeground(Color.gray);
+            }
+        });
+        //Se añaden los componenetes al panel izquierdo
         contentLeft.add(topContentLeft,BorderLayout.NORTH);
         contentLeft.add(centerContentLeft,BorderLayout.CENTER);
+        contentLeft.add(lbAutor,BorderLayout.SOUTH);
     }
     //Crea los componentes del panel Derecho
     private void componentsPanelRight(){
@@ -161,10 +196,13 @@ public class MainIU extends JFrame implements Runnable{
                 JButton boton = btnsquares.get(indice);
 
                 // Cambiar el color de fondo del botón
-                boton.setBackground(Color.WHITE); // Cambia el color como desees
+                boton.setBackground(new Color(185, 135, 10)); // Cambia el color como desees
+                if (i != 0 && i !=  routes.size()-1) {
+                    boton.setForeground(Color.WHITE);
+                }
             }
             try {
-                Thread.sleep(500);
+                Thread.sleep(600);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
