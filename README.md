@@ -9,7 +9,7 @@
 - Tamaño maximo de Matriz: 9x9
 
 ## EJecución
-### Se idica el tamaño de la matriz
+### Se indica el tamaño de la matriz
 ![Captura de pantalla 2023-09-20 004936](https://github.com/B-mtz/Algoritmo_AEstrella/assets/127165596/9230def2-6bcd-4fae-83ed-e06a0fa8bb13)
 
 ### Se rellena la Matriz con 0 y 1
