@@ -1,6 +1,6 @@
 # Algoritmo_AEstrella
 ### Algoritmo que permite encontrar el camino mas corto entre dos puntos dentro de en una matriz
-###Rquerimientos: 
+### Rquerimientos: 
 - Es necesario indicar el tamaño de la matriz a evaluar
 - Rellenar la matriz con 0 o 1, usando 0: espacios 1: Muros
 - Seleccionar el punto de inicio y el punto a llegar
